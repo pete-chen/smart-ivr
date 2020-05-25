@@ -1,10 +1,8 @@
 package hcc.pete.smartivr.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import hcc.pete.smartivr.pojo.Block;
 import hcc.pete.smartivr.service.BlockService;
-import hcc.pete.smartivr.util.CommonResult;
-import hcc.pete.smartivr.util.JSONUtils;
+import hcc.pete.smartivr.utils.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +19,6 @@ public class BlockController {
     private CommonResult result;
     @Autowired
     private BlockService blockService;
-    @Autowired
-    private JSONUtils JSONUtils;
 
     @RequestMapping(value = "/get")
     public CommonResult getBlock(@RequestParam int id) {
@@ -31,34 +27,30 @@ public class BlockController {
             result.setData(block);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(500, "cannot find this block in DB", e);
+            result.fail("cannot find this block in DB", e);
         }
         return result;
     }
 
     @PostMapping(value = "/add")
-    public CommonResult addBlock(@RequestBody JSONObject jsonObject) {
+    public CommonResult addBlock(Block block) {
         try {
-            Block block = new Block();
-            JSONUtils.toBlockObj(jsonObject, block);
             blockService.addBlock(block);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(500, "fail", e);
+            result.fail("fail", e);
         }
         return result;
     }
 
     @PostMapping(value = "update")
-    public CommonResult updateBlock(@RequestBody JSONObject jsonObject) {
+    public CommonResult updateBlock(Block block) {
         try {
-            Block block = new Block();
-            JSONUtils.toBlockObj(jsonObject, block);
             blockService.updateBlock(block);
             result.setData(block);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(500, "fail", e);
+            result.fail("fail", e);
         }
         return result;
     }
@@ -69,7 +61,7 @@ public class BlockController {
             blockService.delById(id);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(500, "fail", e);
+            result.fail("fail", e);
         }
 
         return result;

@@ -10,7 +10,10 @@ import java.util.List;
  * @date 2020/5/15
  */
 public interface AudioDao extends JpaRepository<Audio, Integer> {
-
-    Audio findByCombId(String combId);
-
+    /**
+     * 通过录音文件名字查询
+     * @param fileName 录音文件名
+     * @return
+     */
+    public Audio findByFilename(String fileName);
 }

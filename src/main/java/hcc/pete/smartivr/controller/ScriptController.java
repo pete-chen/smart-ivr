@@ -1,10 +1,8 @@
 package hcc.pete.smartivr.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import hcc.pete.smartivr.pojo.Script;
 import hcc.pete.smartivr.service.ScriptService;
-import hcc.pete.smartivr.util.CommonResult;
-import hcc.pete.smartivr.util.JSONUtils;
+import hcc.pete.smartivr.utils.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +19,6 @@ public class ScriptController {
     private CommonResult result;
     @Autowired
     private ScriptService scriptService;
-    @Autowired
-    private JSONUtils JSONUtils;
 
     @RequestMapping(value = "/get")
     public CommonResult getScript(@RequestParam int id) {
@@ -31,34 +27,30 @@ public class ScriptController {
             result.setData(script);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(500, "cannot find this script in DB", e);
+            result.fail("cannot find this script in DB", e);
         }
         return result;
     }
 
     @PostMapping(value = "/add")
-    public CommonResult addScript(@RequestBody JSONObject jsonObject) {
+    public CommonResult addScript(Script script) {
         try {
-            Script script = new Script();
-            JSONUtils.toScriptObj(jsonObject, script);
             scriptService.addScript(script);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(500, "fail", e);
+            result.fail( "fail", e);
         }
         return result;
     }
 
     @PostMapping(value = "/update")
-    public CommonResult updateScript(@RequestBody JSONObject jsonObject) {
+    public CommonResult updateScript(Script script) {
         try {
-            Script script = new Script();
-            JSONUtils.toScriptObj(jsonObject, script);
             scriptService.updateScript(script);
             result.setData(script);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(500, "fail", e);
+            result.fail( "fail", e);
         }
         return result;
     }
@@ -69,7 +61,7 @@ public class ScriptController {
             scriptService.delById(id);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(500, "fail", e);
+            result.fail( "fail", e);
         }
         return result;
     }

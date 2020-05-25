@@ -13,11 +13,10 @@ import javax.persistence.*;
 @Entity(name = "t_audio")
 public class Audio {
 
-    public Audio() {
-    }
+    public Audio() {}
 
-    public Audio(String combId, String path) {
-        this.combId = combId;
+    public Audio(String filename, String path) {
+        this.filename = filename;
         this.path = path;
     }
 
@@ -29,8 +28,6 @@ public class Audio {
     private String name;
     @Column(name = "block_id")
     private int blockId;
-    @Column(name = "comb_id")
-    private String combId;
     @Column(name = "path")
     private String path;
     @Column(name = "comment")

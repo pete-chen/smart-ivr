@@ -1,6 +1,5 @@
 package hcc.pete.smartivr.service;
 
-import com.alibaba.fastjson.JSONArray;
 import hcc.pete.smartivr.dao.ScriptDao;
 import hcc.pete.smartivr.pojo.Script;
 import org.springframework.beans.factory.annotation.Autowired;

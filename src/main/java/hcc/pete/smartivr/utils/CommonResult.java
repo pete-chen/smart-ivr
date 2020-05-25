@@ -1,8 +1,7 @@
-package hcc.pete.smartivr.util;
+package hcc.pete.smartivr.utils;
 
 import lombok.Data;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Pete Chen
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Data
-@Component
+@Repository
 public class CommonResult {
 
     private Integer state;
@@ -33,14 +32,14 @@ public class CommonResult {
         this.msg = msg;
     }
 
-    public void fail(Integer state, String msg, Object data) {
-        this.state = state;
+    public void fail(String msg, Object data) {
+        this.state = 500;
         this.msg = msg;
         this.data = data;
     }
 
-    public void success(Integer state, String msg, Object data) {
-        this.state = state;
+    public void success(String msg, Object data) {
+        this.state = 200;
         this.msg = msg;
         this.data = data;
     }

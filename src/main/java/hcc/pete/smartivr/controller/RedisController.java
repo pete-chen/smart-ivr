@@ -1,8 +1,9 @@
 package hcc.pete.smartivr.controller;
 
 import hcc.pete.smartivr.pojo.Audio;
-import hcc.pete.smartivr.util.AudioStream;
-import hcc.pete.smartivr.util.RedisUtil;
+import hcc.pete.smartivr.utils.AudioStream;
+import hcc.pete.smartivr.utils.CommonResult;
+import hcc.pete.smartivr.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +27,8 @@ public class RedisController {
     private RedisUtil redisUtil;
     @Autowired
     private AudioStream audioStream;
+    @Autowired
+    private CommonResult result;
 
     @RequestMapping(value = "/getAudio")
     public void getAudio(@RequestParam String combId, HttpServletResponse response) throws IOException {

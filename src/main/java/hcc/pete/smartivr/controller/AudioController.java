@@ -1,18 +1,14 @@
 package hcc.pete.smartivr.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import hcc.pete.smartivr.pojo.Audio;
 import hcc.pete.smartivr.service.AudioService;
-import hcc.pete.smartivr.util.AudioStream;
-import hcc.pete.smartivr.util.CommonResult;
-import hcc.pete.smartivr.util.JSONUtils;
-import hcc.pete.smartivr.util.RedisUtil;
+import hcc.pete.smartivr.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Pete Chen
@@ -28,92 +24,71 @@ public class AudioController {
     @Autowired
     private AudioService audioService;
     @Autowired
-    private JSONUtils jsonUtils;
-    @Autowired
     private AudioStream audioStream;
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisMysqlSearch redisMysqlSearch;
 
+    /**
+     * 查找所有mysql已存在的音频数据
+     * @return 以JSONArray的格式返回
+     */
     @RequestMapping(value = "getAll")
-    @ResponseBody
-    public JSONArray getAll() {
-        try {
-            return JSONArray.parseArray(JSON.toJSONString(audioService.findAll()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public CommonResult getAll() {
+        List<Audio> audioList = audioService.findAllJSON();
+        result.success("success", audioList);
 
-        return null;
+        return result;
     }
 
-    @RequestMapping(value = "get")
-    public void getAudio(@RequestParam String combId, HttpServletResponse response) {
-        Audio audio;
-        try {
-            String path = redisUtil.get(combId);
-            if (path == null) {
-                audio = audioService.findByCombId(combId);
-                redisUtil.set(combId, audio.getPath());
-            } else {
-                audio = new Audio(combId, path);
-            }
+    /**
+     * 根据combId查询音频文件。
+     * 先从redis缓存进行查询，
+     * 若redis缓存没有数据，则进入mysql数据库进行查询。
+     * @param fileName          音频文件名
+     * @param response          响应，返回一个文件流
+     * @throws IOException      audioStream.returnStream()方法的异常抛出
+     */
+    @GetMapping(value = "getStream")
+    public void getAudioStream(String fileName, HttpServletResponse response) {
+        Audio audio = redisMysqlSearch.search(fileName);
+
+        if (audio != null) {
             audioStream.returnStream(audio, response);
-            result.success(200, "success", audio);
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.fail(500, "cannot find this audio in DB", null);
         }
     }
 
+    /**
+     * 添加音频文件到数据库
+     * @param audio         audio对象
+     * @return              返回CommonResults对象
+     */
     @PostMapping(value = "add")
-    public CommonResult addAudio(@RequestBody JSONObject jsonObject) {
-        try {
-            Audio audio = new Audio();
-            jsonUtils.toAudioObj(jsonObject, audio);
-            if (audioService.findByCombId(audio.getCombId()) == null) {
-                audioService.addAudio(audio);
-                redisUtil.set(audio.getCombId(), audio.getPath());
-                result.success(200, "success", audio);
-            } else {
-                result.fail(500, "duplicate data", audio);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.fail(500, "fail", null);
-        }
+    public CommonResult addAudio(Audio audio) {
+        audioService.addAudio(audio, result);
         return result;
     }
 
+    /**
+     * 更新音频文件属性
+     * @param audio         audio对象
+     * @return              返回CommonResult对象
+     */
     @PostMapping(value = "update")
-    public CommonResult updateAudio(@RequestBody JSONObject jsonObject) {
-        try {
-            Audio audio = new Audio();
-            jsonUtils.toAudioObj(jsonObject, audio);
-            Audio audioDB = audioService.findByCombId(audio.getCombId());
-            if (audioDB != null) {
-                audioService.updateAudio(audioDB, audio);
-                redisUtil.update(audio.getCombId(), audio.getPath());
-                result.success(200, "success", audio);
-            } else {
-                result.fail(500, "cannot find this data in DB", audio);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.fail(500, "fail", null);
-        }
+    public CommonResult updateAudio(Audio audio) {
+        Audio audioDB = new Audio();
+        audioService.updateAudio(audioDB, audio, result);
         return result;
     }
 
-    @RequestMapping(value = "delete")
-    public CommonResult delAudio(@RequestParam int id) {
-        try {
-            audioService.delById(id);
-            result.success(200, "success", null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.fail(500, "fail", null);
-        }
+    /**
+     * 根据音频文件id删除音频文件
+     * @param id            音频文件id
+     * @param result        CommonResult对象
+     * @return              CommonResult对象
+     */
+    @GetMapping(value = "delete")
+    public CommonResult delAudio(int id, CommonResult result) {
+        audioService.delById(id, result);
         return result;
     }
 

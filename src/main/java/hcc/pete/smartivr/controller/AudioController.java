@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping(value = "/audio")
+@RequestMapping(value = "audio")
 public class AudioController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class AudioController {
      * @return 以JSONArray的格式返回
      */
     @UserLoginToken
-    @RequestMapping(value = "getAll")
+    @GetMapping(value = "getAll")
     public CommonResult getAll() {
         List<Audio> audioList = audioService.findAllJSON();
         result.success("success", audioList);
@@ -48,7 +48,6 @@ public class AudioController {
      * 若redis缓存没有数据，则进入mysql数据库进行查询。
      * @param fileName          音频文件名
      * @param response          响应，返回一个文件流
-     * @throws IOException      audioStream.returnStream()方法的异常抛出
      */
     @GetMapping(value = "getStream")
     public void getAudioStream(String fileName, HttpServletResponse response) {
@@ -66,7 +65,7 @@ public class AudioController {
      */
     @UserLoginToken
     @PostMapping(value = "add")
-    public CommonResult addAudio(Audio audio) {
+    public CommonResult addAudio(@RequestBody Audio audio) {
         audioService.addAudio(audio, result);
         return result;
     }
@@ -78,7 +77,7 @@ public class AudioController {
      */
     @UserLoginToken
     @PostMapping(value = "update")
-    public CommonResult updateAudio(Audio audio) {
+    public CommonResult updateAudio(@RequestBody Audio audio) {
         Audio audioDB = new Audio();
         audioService.updateAudio(audioDB, audio, result);
         return result;

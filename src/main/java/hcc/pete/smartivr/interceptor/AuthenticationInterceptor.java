@@ -29,9 +29,18 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private UserService userService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
+        // 获取cookie中的token令牌
+        String token = "";
         Cookie[] cookies = request.getCookies();
-        Cookie cookie = cookies[0];
-        String token = cookie.getValue();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
         // 如果不是映射到方法直接通过
         if (!(object instanceof HandlerMethod)) {
             return true;
@@ -52,7 +61,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
             if (userLoginToken.required()) {
                 // 执行认证
-                if (token == null || token.equals("")) {
+                if (token == null || "".equals(token)) {
                     throw new RuntimeException("无token， 请重新登录");
                 }
                 // 获取token中的user id

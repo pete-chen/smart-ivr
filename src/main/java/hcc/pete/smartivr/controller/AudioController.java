@@ -1,5 +1,6 @@
 package hcc.pete.smartivr.controller;
 
+import hcc.pete.smartivr.annotation.UserLoginToken;
 import hcc.pete.smartivr.pojo.Audio;
 import hcc.pete.smartivr.service.AudioService;
 import hcc.pete.smartivr.utils.*;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 
 @RestController
+@UserLoginToken
 @RequestMapping(value = "/audio")
 public class AudioController {
 
@@ -32,10 +34,25 @@ public class AudioController {
      * 查找所有mysql已存在的音频数据
      * @return 以JSONArray的格式返回
      */
-    @RequestMapping(value = "getAll")
+    @UserLoginToken
+    @GetMapping(value = "getAll")
     public CommonResult getAll() {
         List<Audio> audioList = audioService.findAllJSON();
         result.success("success", audioList);
+
+        return result;
+    }
+
+    /**
+     * 查找音频信息，返回audio对象
+     * @param fileName 音频文件名
+     * @return
+     */
+    @UserLoginToken
+    @GetMapping(value = "get")
+    public CommonResult get(String fileName) {
+        Audio audio = redisMysqlSearch.search(fileName);
+        result.success("success", audio);
 
         return result;
     }
@@ -62,6 +79,7 @@ public class AudioController {
      * @param audio         audio对象
      * @return              返回CommonResults对象
      */
+    @UserLoginToken
     @PostMapping(value = "add")
     public CommonResult addAudio(Audio audio) {
         audioService.addAudio(audio, result);
@@ -73,6 +91,7 @@ public class AudioController {
      * @param audio         audio对象
      * @return              返回CommonResult对象
      */
+    @UserLoginToken
     @PostMapping(value = "update")
     public CommonResult updateAudio(Audio audio) {
         Audio audioDB = new Audio();
@@ -86,6 +105,7 @@ public class AudioController {
      * @param result        CommonResult对象
      * @return              CommonResult对象
      */
+    @UserLoginToken
     @GetMapping(value = "delete")
     public CommonResult delAudio(int id, CommonResult result) {
         audioService.delById(id, result);

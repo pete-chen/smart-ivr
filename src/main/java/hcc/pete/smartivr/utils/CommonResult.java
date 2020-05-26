@@ -1,7 +1,7 @@
 package hcc.pete.smartivr.utils;
 
 import lombok.Data;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Pete Chen
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Data
-@Repository
+@Component
 public class CommonResult {
 
     private Integer state;

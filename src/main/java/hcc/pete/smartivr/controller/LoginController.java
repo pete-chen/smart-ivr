@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author Pete Chen
  * @date 2020/5/25
@@ -26,8 +29,8 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("login")
-    public CommonResult login(String username, String password) {
+    @GetMapping("login")
+    public CommonResult login(String username, String password, HttpServletResponse response) {
         User user = userService.findByUsername(username);
         if (user == null) {
             result.fail("登录失败用户不存在", null);
@@ -37,6 +40,9 @@ public class LoginController {
             } else {
                 String token = JwtUtil.getToken(user);
                 result.success("登录成功", token);
+                Cookie cookie = new Cookie("token", token);
+                cookie.setPath("/");
+                response.addCookie(cookie);
             }
         }
         return result;

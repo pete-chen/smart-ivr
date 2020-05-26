@@ -17,7 +17,6 @@ import java.util.List;
  */
 
 @RestController
-@UserLoginToken
 @RequestMapping(value = "/audio")
 public class AudioController {
 
@@ -35,24 +34,10 @@ public class AudioController {
      * @return 以JSONArray的格式返回
      */
     @UserLoginToken
-    @GetMapping(value = "getAll")
+    @RequestMapping(value = "getAll")
     public CommonResult getAll() {
         List<Audio> audioList = audioService.findAllJSON();
         result.success("success", audioList);
-
-        return result;
-    }
-
-    /**
-     * 查找音频信息，返回audio对象
-     * @param fileName 音频文件名
-     * @return
-     */
-    @UserLoginToken
-    @GetMapping(value = "get")
-    public CommonResult get(String fileName) {
-        Audio audio = redisMysqlSearch.search(fileName);
-        result.success("success", audio);
 
         return result;
     }

@@ -6,6 +6,8 @@ import hcc.pete.smartivr.utils.CommonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+
 /**
  * @author Pete Chen
  * @date 2020/5/15
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/script")
+@Transactional(rollbackOn = Exception.class)
 public class ScriptController {
 
     @Autowired
@@ -20,8 +23,8 @@ public class ScriptController {
     @Autowired
     private ScriptService scriptService;
 
-    @RequestMapping(value = "/get")
-    public CommonResult getScript(@RequestParam int id) {
+    @GetMapping(value = "/get")
+    public CommonResult getScript(int id) {
         try {
             Script script = scriptService.findById(id);
             result.setData(script);
@@ -33,7 +36,7 @@ public class ScriptController {
     }
 
     @PostMapping(value = "/add")
-    public CommonResult addScript(Script script) {
+    public CommonResult addScript(@RequestBody Script script) {
         try {
             scriptService.addScript(script);
         } catch (Exception e) {
@@ -44,7 +47,7 @@ public class ScriptController {
     }
 
     @PostMapping(value = "/update")
-    public CommonResult updateScript(Script script) {
+    public CommonResult updateScript(@RequestBody Script script) {
         try {
             scriptService.updateScript(script);
             result.setData(script);
@@ -55,8 +58,8 @@ public class ScriptController {
         return result;
     }
 
-    @RequestMapping(value = "delete")
-    public CommonResult delScript(@RequestParam int id) {
+    @GetMapping(value = "delete")
+    public CommonResult delScript(int id) {
         try {
             scriptService.delById(id);
         } catch (Exception e) {

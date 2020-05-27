@@ -18,22 +18,16 @@ public class RedisMysqlSearch {
     @Autowired
     private AudioService audioService;
 
-    public Audio search(String fileName) {
+    public Audio search(String filename) throws Exception{
 
         // Redis 查询
-        String path = redisUtil.get(fileName);
-
+        String path = redisUtil.get(filename);
         // Mysql 查询
-        if (path == null) {
-            Audio audio = audioService.findByFileName(fileName);
-            if (audio != null) {
-                return audio;
-            }
+        if (null == path || "".equals(path)) {
+             return audioService.findByFileName(filename);
         } else {
-            return new Audio(fileName, path);
+            return new Audio(filename, path);
         }
-
-        return null;
 
     }
 }

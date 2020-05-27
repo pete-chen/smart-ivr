@@ -12,7 +12,9 @@ import java.util.Date;
  */
 public class JwtUtil {
 
-    // 有效时间2小时
+    /**
+     * EXPIRE_TIME token令牌有效时间，以毫秒为单位
+     */
     private static final long EXPIRE_TIME= 2*60*60*1000;
 
     public static String getToken(User user) {

@@ -2,7 +2,7 @@ package hcc.pete.smartivr.controller;
 
 import hcc.pete.smartivr.pojo.Block;
 import hcc.pete.smartivr.service.BlockService;
-import hcc.pete.smartivr.utils.CommonResult;
+import hcc.pete.smartivr.pojo.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +19,12 @@ import javax.transaction.Transactional;
 public class BlockController {
 
     @Autowired
-    private CommonResult result;
+    private CommonResponse result;
     @Autowired
     private BlockService blockService;
 
     @GetMapping(value = "/get")
-    public CommonResult getBlock(int id) {
+    public CommonResponse getBlock(int id) {
         try {
             Block block = blockService.findById(id);
             result.success("success", block);
@@ -36,7 +36,7 @@ public class BlockController {
     }
 
     @PostMapping(value = "/add")
-    public CommonResult addBlock(@RequestBody Block block) {
+    public CommonResponse addBlock(@RequestBody Block block) {
         try {
             blockService.addBlock(block);
             result.success("success", block);
@@ -48,7 +48,7 @@ public class BlockController {
     }
 
     @PostMapping(value = "update")
-    public CommonResult updateBlock(@RequestBody Block block) {
+    public CommonResponse updateBlock(@RequestBody Block block) {
         try {
             blockService.updateBlock(block);
             result.success("success", block);
@@ -60,7 +60,7 @@ public class BlockController {
     }
 
     @GetMapping(value = "delete")
-    public CommonResult delBlock(int id) {
+    public CommonResponse delBlock(int id) {
         try {
             blockService.delById(id);
             result.success("success", id);

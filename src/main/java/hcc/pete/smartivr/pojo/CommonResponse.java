@@ -1,7 +1,10 @@
-package hcc.pete.smartivr.utils;
+package hcc.pete.smartivr.pojo;
 
 import lombok.Data;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
 
 /**
  * @author Pete Chen
@@ -10,24 +13,24 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-public class CommonResult {
+public class CommonResponse implements Serializable {
 
     private Integer state;
     private String msg;
     private Object data;
 
-    public CommonResult() {
+    public CommonResponse() {
         this.state = 200;
         this.msg = "success";
     }
 
-    public CommonResult(Integer state, String msg, Object data) {
+    public CommonResponse(Integer state, String msg, Object data) {
         this.state = state;
         this.msg = msg;
         this.data = data;
     }
 
-    public CommonResult(Integer state, String msg) {
+    public CommonResponse(Integer state, String msg) {
         this.state = state;
         this.msg = msg;
     }

@@ -2,7 +2,7 @@ package hcc.pete.smartivr.controller;
 
 import hcc.pete.smartivr.pojo.Audio;
 import hcc.pete.smartivr.utils.AudioStream;
-import hcc.pete.smartivr.utils.CommonResult;
+import hcc.pete.smartivr.pojo.CommonResponse;
 import hcc.pete.smartivr.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.io.IOException;
 
 /**
  * @author Pete Chen
@@ -29,7 +28,7 @@ public class RedisController {
     @Autowired
     private AudioStream audioStream;
     @Autowired
-    private CommonResult result;
+    private CommonResponse result;
 
     @GetMapping(value = "/getAudio")
     public void getAudio(@RequestParam String combId, HttpServletResponse response) {

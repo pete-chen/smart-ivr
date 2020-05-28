@@ -2,6 +2,7 @@ package hcc.pete.smartivr.controller;
 
 import hcc.pete.smartivr.annotation.UserLoginToken;
 import hcc.pete.smartivr.pojo.Audio;
+import hcc.pete.smartivr.pojo.CommonResponse;
 import hcc.pete.smartivr.service.AudioService;
 import hcc.pete.smartivr.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.List;
 public class AudioController {
 
     @Autowired
-    private CommonResult result;
+    private CommonResponse commonResponse;
     @Autowired
     private AudioService audioService;
     @Autowired
@@ -34,15 +35,15 @@ public class AudioController {
      */
     @UserLoginToken
     @GetMapping(value = "getAll")
-    public CommonResult getAll() {
+    public CommonResponse getAll() {
         try {
             List<Audio> audioList = audioService.findAllJSON();
-            result.success("success", audioList);
+            commonResponse.success("success", audioList);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail("fail", e.getMessage());
+            commonResponse.fail("fail", e.getMessage());
         }
-        return result;
+        return commonResponse;
     }
 
     /**
@@ -52,16 +53,16 @@ public class AudioController {
      */
     @UserLoginToken
     @GetMapping(value = "get")
-    public CommonResult getAudio(String filename) {
+    public CommonResponse getAudio(String filename) {
         try {
             Audio audio = audioService.findByFileName(filename);
-            result.success("success", audio);
+            commonResponse.success("success", audio);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(e.getMessage(), filename);
+            commonResponse.fail(e.getMessage(), filename);
         }
 
-        return result;
+        return commonResponse;
 
     }
 
@@ -91,15 +92,15 @@ public class AudioController {
      */
     @UserLoginToken
     @PostMapping(value = "add")
-    public CommonResult addAudio(@RequestBody Audio audio) {
+    public CommonResponse addAudio(@RequestBody Audio audio) {
         try {
             audioService.addAudio(audio);
-            result.success("success", audio);
+            commonResponse.success("success", audio);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(e.getMessage(), audio);
+            commonResponse.fail(e.getMessage(), audio);
         }
-        return result;
+        return commonResponse;
 
     }
 
@@ -110,15 +111,15 @@ public class AudioController {
      */
     @UserLoginToken
     @PostMapping(value = "update")
-    public CommonResult updateAudio(@RequestBody Audio audio) {
+    public CommonResponse updateAudio(@RequestBody Audio audio) {
         try {
             audioService.updateAudio(audio);
-            result.success("success", audio);
+            commonResponse.success("success", audio);
         } catch (Exception e) {
             e.printStackTrace();
-            result.fail(e.getMessage(), audio);
+            commonResponse.fail(e.getMessage(), audio);
         }
-        return result;
+        return commonResponse;
     }
 
     /**
@@ -128,16 +129,16 @@ public class AudioController {
      */
     @UserLoginToken
     @GetMapping(value = "delete")
-    public CommonResult delAudio(int id) {
+    public CommonResponse delAudio(int id) {
         try {
             audioService.delById(id);
-            result.success("success", id);
+            commonResponse.success("success", id);
         }catch (Exception e) {
             e.printStackTrace();
-            result.fail(e.getMessage(), id);
+            commonResponse.fail(e.getMessage(), id);
         }
 
-        return result;
+        return commonResponse;
     }
 
 }

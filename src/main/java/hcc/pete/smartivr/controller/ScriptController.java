@@ -2,7 +2,7 @@ package hcc.pete.smartivr.controller;
 
 import hcc.pete.smartivr.pojo.Script;
 import hcc.pete.smartivr.service.ScriptService;
-import hcc.pete.smartivr.utils.CommonResult;
+import hcc.pete.smartivr.pojo.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +19,12 @@ import javax.transaction.Transactional;
 public class ScriptController {
 
     @Autowired
-    private CommonResult result;
+    private CommonResponse result;
     @Autowired
     private ScriptService scriptService;
 
     @GetMapping(value = "/get")
-    public CommonResult getScript(int id) {
+    public CommonResponse getScript(int id) {
         try {
             Script script = scriptService.findById(id);
             result.setData(script);
@@ -36,7 +36,7 @@ public class ScriptController {
     }
 
     @PostMapping(value = "/add")
-    public CommonResult addScript(@RequestBody Script script) {
+    public CommonResponse addScript(@RequestBody Script script) {
         try {
             scriptService.addScript(script);
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class ScriptController {
     }
 
     @PostMapping(value = "/update")
-    public CommonResult updateScript(@RequestBody Script script) {
+    public CommonResponse updateScript(@RequestBody Script script) {
         try {
             scriptService.updateScript(script);
             result.setData(script);
@@ -59,7 +59,7 @@ public class ScriptController {
     }
 
     @GetMapping(value = "delete")
-    public CommonResult delScript(int id) {
+    public CommonResponse delScript(int id) {
         try {
             scriptService.delById(id);
         } catch (Exception e) {

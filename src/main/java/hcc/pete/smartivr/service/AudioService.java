@@ -2,7 +2,6 @@ package hcc.pete.smartivr.service;
 
 import hcc.pete.smartivr.dao.AudioDao;
 import hcc.pete.smartivr.pojo.Audio;
-import hcc.pete.smartivr.utils.CommonResult;
 import hcc.pete.smartivr.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,7 +50,7 @@ public class AudioService {
 
     public Audio findById(int id) throws Exception {
         Optional<Audio> optionalAudio = audioDao.findById(id);
-        if(optionalAudio != null && optionalAudio.isPresent()) {
+        if(optionalAudio.isPresent()) {
             return optionalAudio.get();
         } else {
             throw new Exception("cannot find this audio file");
